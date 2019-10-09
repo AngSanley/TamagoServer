@@ -1,22 +1,22 @@
 'use strict';
 
-const response = require('./res');
-const connection = require('./conn');
-const request = require('request');
+var response = require('./res');
+var connection = require('./conn');
+var request = require('request');
 
-exports.index = (req, res) => {
+exports.index = function(req, res) {
     res.sendFile( __dirname + "/public/" + "index.html" );
 };
 
-exports.notFoundPage = (req, res) => {
+exports.notFoundPage = function(req, res) {
     response.notFound(res);
 };
 
-exports.loginUser = (req, res) => {
-    const sql = "SELECT * FROM `users_list` WHERE `user_tel` = ?";
-    const userTel = req.body.user_tel;
-    const OTP_ACCOUNT = "numb_brianra4";
-    const OTP_PASSWORD = "123456";
+exports.loginUser = function(req, res) {
+    var sql = "SELECT * FROM `users_list` WHERE `user_tel` = ?";
+    var userTel = req.body.user_tel;
+    var OTP_ACCOUNT = "numb_brianra4";
+    var OTP_PASSWORD = "123456";
     
     function generateOtpUrl(numbers, content) {
         content = encodeURIComponent(content.trim());
@@ -69,10 +69,10 @@ exports.loginUser = (req, res) => {
     });
 };
 
-exports.verifyOtp = (req, res) => {
-    const sql = "SELECT `user_id`, `user_name`, `user_tel`, `user_email`, `user_type` FROM `users_list` WHERE `user_tel` = ? AND `latest_otp` = ?";
-    const userTel = req.body.user_tel;
-    const otp = req.body.otp;
+exports.verifyOtp = function(req, res) {
+    var sql = "SELECT `user_id`, `user_name`, `user_tel`, `user_email`, `user_type` FROM `users_list` WHERE `user_tel` = ? AND `latest_otp` = ?";
+    var userTel = req.body.user_tel;
+    var otp = req.body.otp;
 
     connection.query(sql, [userTel, otp], function (error, rows, fields){
         if (error){
@@ -89,9 +89,9 @@ exports.verifyOtp = (req, res) => {
     });
 };
 
-exports.newUser = (req, res) => {
-    const name = req.body.user_name;
-    const tel = req.body.user_tel;
+exports.newUser = function(req, res) {
+    var name = req.body.user_name;
+    var tel = req.body.user_tel;
 
     if (name == null || tel == null) {
         response.error("Data supplied not sufficient", res);
@@ -115,15 +115,15 @@ exports.newUser = (req, res) => {
     }
 };
 
-exports.newChild = (req, res) => {
-    const parentId = req.body.parent_id;
-    const name = req.body.child_name;
-    const dob = req.body.child_dob; //YYYY-MM-DD
-    const initialSaving = req.body.child_initial_saving;
-    const dailyLimit = req.body.child_daily_limit;
-    const avatar = req.body.child_avatar_type;
-    const gender = req.body.child_gender; //1 cowo, 2 cewe
-    const relation = req.body.parent_relation;
+exports.newChild = function(req, res) {
+    var parentId = req.body.parent_id;
+    var name = req.body.child_name;
+    var dob = req.body.child_dob; //YYYY-MM-DD
+    var initialSaving = req.body.child_initial_saving;
+    var dailyLimit = req.body.child_daily_limit;
+    var avatar = req.body.child_avatar_type;
+    var gender = req.body.child_gender; //1 cowo, 2 cewe
+    var relation = req.body.parent_relation;
 
     if (name == null || dob == null || initialSaving == null || dailyLimit == null || avatar == null || gender == null) {
         response.error("Data supplied not sufficient", res);
@@ -149,10 +149,10 @@ exports.newChild = (req, res) => {
     }
 };
 
-exports.newChildRelation = (req, res) => {
-    const childId = req.body.child_id;
-    const parentId = req.body.parent_id;
-    const relation = req.body.parent_relation;
+exports.newChildRelation = function(req, res) {
+    var childId = req.body.child_id;
+    var parentId = req.body.parent_id;
+    var relation = req.body.parent_relation;
 
     if (childId == null || parentId == null || relation == null) {
         response.error("Data supplied not sufficient", res);
@@ -169,8 +169,8 @@ exports.newChildRelation = (req, res) => {
     }
 };
 
-exports.getChildrenList = (req, res) => {
-    const parentId = req.body.parent_id;
+exports.getChildrenList = function(req, res) {
+    var parentId = req.body.parent_id;
 
     if (parentId == null) {
         response.error("Data not sufficient", res);
@@ -186,10 +186,10 @@ exports.getChildrenList = (req, res) => {
         });
 
     }
-};
+}
 
-exports.getTaskList = (req, res) => {
-    const childId = req.body.child_id;
+exports.getTaskList = function(req, res) {
+    var childId = req.body.child_id;
 
     if (childId == null) {
         response.error("Data not sufficient", res);
@@ -207,19 +207,19 @@ exports.getTaskList = (req, res) => {
     }
 }
 
-exports.newTask = (req, res) => {
-    const taskName = req.body.task_name;
-    const taskDetail = req.body.task_detail;
-    const childId = req.body.child_id;
-    const parentId = req.body.parent_id;
-    const rewardWallet = req.body.task_reward_wallet;
-    const rewardEggs = req.body.task_reward_eggs;
-    const taskExpiry = req.body.task_expiry;
+exports.newTask = function(req, res) {
+    var taskName = req.body.task_name;
+    var taskDetail = req.body.task_detail;
+    var childId = req.body.child_id;
+    var parentId = req.body.parent_id;
+    var rewardWallet = req.body.task_reward_wallet;
+    var rewardEggs = req.body.task_reward_eggs;
+    var taskExpiry = req.body.task_expiry;
 
     if (taskName == null || taskDetail == null || childId == null || parentId == null || rewardWallet == null || rewardEggs == null || taskExpiry == null) {
         response.error("Data supplied not sufficient", res);
     } else {
-        const sql = 'INSERT INTO `child_task_list` (`task_name`, `task_child_id`, `task_detail`, `task_parent_id`, `task_reward_wallet`, `task_reward_eggs`, `task_expiry`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        var sql = 'INSERT INTO `child_task_list` (`task_name`, `task_child_id`, `task_detail`, `task_parent_id`, `task_reward_wallet`, `task_reward_eggs`, `task_expiry`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         connection.query(sql, [taskName, childId, taskDetail, parentId, rewardWallet, rewardEggs, taskExpiry], function (error, rows){
             if(error){
                 console.log(error)
