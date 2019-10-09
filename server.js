@@ -1,18 +1,15 @@
-var express = require('express');
-var https = require('https');
-var fs = require('fs');
-var app = express();
-var port = process.env.PORT || 3000;
-var portHttps = 3443;
-var bodyParser = require('body-parser');
-var controller = require('./controller');
-var path = require('path');
+const express = require('express');
+const https = require('https');
+const app = express();
+const port = process.env.PORT || 3000;
+const portHttps = 3443;
+const bodyParser = require('body-parser');
+const path = require('path');
+const routes = require('./routes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/static', express.static(path.join(__dirname, 'public')));
-
-var routes = require('./routes');
 routes(app);
 
 app.listen(port);
