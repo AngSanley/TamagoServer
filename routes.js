@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(app) {
-    var todoList = require('./controller');
+    const todoList = require('./controller');
 
     app.route('/')
         .get(todoList.index);
