@@ -89,3 +89,5 @@ typings/
 
 # Config files
 conn.js
+
+.idea/
